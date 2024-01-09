@@ -6,7 +6,7 @@ public struct SmallXXHash {
 	const uint primeD = 0b00100111110101001110101100101111;
 	const uint primeE = 0b00010110010101100110011110110001;
 
-    
+
     uint accumulator;
 
     public SmallXXHash(int seed){
@@ -14,4 +14,15 @@ public struct SmallXXHash {
     }
 
     public static implicit operator uint (SmallXXHash hash) => hash.accumulator;
+
+    public void Eat(int data){
+        accumulator = RotateLeft(accumulator + (uint)data * primeC, 17) * primeD;
+    }
+
+    public void Eat(byte data){
+        accumulator = RotateLeft(accumulator + data * primeE, 11) * primeA;
+    }
+
+    static uint RotateLeft(uint data, int steps) => 
+        (data << steps) | (data >> 32 - steps);
 }

@@ -17,9 +17,12 @@ public class HashVisualization : MonoBehaviour{
         public float invResolution;
 
         public void Execute(int i){
-            float v = floor(invResolution * i + 0.00001f);
-            float u = i - resolution * v;
+            int v = (int)floor(invResolution * i + 0.00001f);
+            int u = i - resolution * v;
+
             var hash = new SmallXXHash(0);
+            hash.Eat(u);
+            hash.Eat(v);
             hashes[i] = hash;
         }
     }
