@@ -43,6 +43,9 @@ public class HashVisualization : MonoBehaviour{
     [SerializeField]
     int seed;
 
+    [SerializeField, Range(-2f, 2f)]
+    float verticalOffset = 1f;
+
     NativeArray<uint> hashes;
 
     ComputeBuffer hashesBuffer;
@@ -66,7 +69,9 @@ public class HashVisualization : MonoBehaviour{
 
         propertyBlock ??= new MaterialPropertyBlock();
         propertyBlock.SetBuffer(hashesId, hashesBuffer);
-        propertyBlock.SetVector(configId, new Vector4(resolution, 1f / resolution));
+        propertyBlock.SetVector(configId, new Vector4(
+            resolution, 1f / resolution, verticalOffset / resolution
+        ));
     }
 
     void OnDisable(){
