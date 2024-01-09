@@ -13,7 +13,15 @@ public struct SmallXXHash {
         accumulator = (uint)seed + primeE;
     }
 
-    public static implicit operator uint (SmallXXHash hash) => hash.accumulator;
+    public static implicit operator uint (SmallXXHash hash){
+        uint avalanche = hash.accumulator;
+        avalanche ^= avalanche >> 15;
+		avalanche *= primeB;
+		avalanche ^= avalanche >> 13;
+		avalanche *= primeC;
+		avalanche ^= avalanche >> 16;
+		return avalanche;
+    } 
 
     public void Eat(int data){
         accumulator = RotateLeft(accumulator + (uint)data * primeC, 17) * primeD;
