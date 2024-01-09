@@ -21,7 +21,7 @@ public class HashVisualization : MonoBehaviour{
             int u = i - resolution * v - resolution / 2;
             v -= resolution / 2;
 
-            hashes[i] = new SmallXXHash(0).Eat(u).Eat(v);
+            hashes[i] = SmallXXHash.Seed(0).Eat(u).Eat(v);
         }
     }
 
