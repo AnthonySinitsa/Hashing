@@ -19,7 +19,8 @@ public class HashVisualization : MonoBehaviour{
         public void Execute(int i){
             float v = floor(invResolution * i + 0.00001f);
             float u = i - resolution * v;
-            hashes[i] = (uint)(frac(u * v * 0.381f) * 256f);
+            var hash = new SmallXXHash(0);
+            hashes[i] = hash;
         }
     }
 
