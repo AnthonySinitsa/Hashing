@@ -23,12 +23,14 @@ public struct SmallXXHash {
 		return avalanche;
     } 
 
-    public void Eat(int data){
+    public SmallXXHash Eat(int data){
         accumulator = RotateLeft(accumulator + (uint)data * primeC, 17) * primeD;
+        return this;
     }
 
-    public void Eat(byte data){
+    public SmallXXHash Eat(byte data){
         accumulator = RotateLeft(accumulator + data * primeE, 11) * primeA;
+        return this;
     }
 
     static uint RotateLeft(uint data, int steps) => 
