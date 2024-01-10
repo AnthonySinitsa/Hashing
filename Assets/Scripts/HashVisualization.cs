@@ -49,6 +49,11 @@ public class HashVisualization : MonoBehaviour{
     [SerializeField, Range(-2f, 2f)]
     float verticalOffset = 1f;
 
+    [SerializeField]
+    SpaceTRS domain = new SpaceTRS{
+        scale = 8f
+    };
+
     NativeArray<uint> hashes;
 
     ComputeBuffer hashesBuffer;
