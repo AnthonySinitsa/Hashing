@@ -9,23 +9,18 @@ using static Unity.Mathematics.math;
 public class HashVisualization : MonoBehaviour{
     [BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
     struct HashJob : IJobFor{
+        [ReadOnly]
+        public NativeArray<float3> positions;
+
         [WriteOnly]
         public NativeArray<uint> hashes;
-
-        public int resolution;
-
-        public float invResolution;
 
         public SmallXXHash hash;
 
         public float3x4 domainTRS;
 
         public void Execute(int i){
-            float vf = (int)floor(invResolution * i + 0.00001f);
-            float uf = invResolution * (i - resolution * vf + 0.5f) - 0.5f;
-            vf = invResolution * (vf + 0.5f) - 0.5f;
-
-            float3 p = mul(domainTRS, float4(uf, 0f, vf, 1f));
+            float3 p = mul(domainTRS, float4(positions[i], 1f));
 
             int u = (int)floor(p.x);
             int v = (int)floor(p.y);
@@ -78,9 +73,8 @@ public class HashVisualization : MonoBehaviour{
         JobHandle handle = Shapes.Job.ScheduleParallel(positions, resolution, default);
 
         new HashJob{
+            positions = positions,
             hashes = hashes,
-            resolution = resolution,
-            invResolution = 1f / resolution,
             hash = SmallXXHash.Seed(seed),
             domainTRS = domain.Matrix
         }.ScheduleParallel(hashes.Length, resolution, handle).Complete();
