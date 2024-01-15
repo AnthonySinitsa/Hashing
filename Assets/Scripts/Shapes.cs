@@ -20,7 +20,11 @@ public static class Shapes {
 		return uv;
 	}
 
-    public struct Plane {
+    public interface IShape{
+        Point4 GetPoint4(int i, float resolution, float invResolution);
+    }
+
+    public struct Plane : IShape{
 		public Point4 GetPoint4 (int i, float resolution, float invResolution) {
 			float4x2 uv = IndexTo4UV(i, resolution, invResolution);
 			return new Point4 {
