@@ -7,6 +7,29 @@ using static Unity.Mathematics.math;
 
 public static class Shapes {
 
+    public struct Point4 {
+		public float4x3 positions, normals;
+	}
+
+	public static float4x2 IndexTo4UV (int i, float resolution, float invResolution) {
+		float4x2 uv;
+		float4 i4 = 4f * i + float4(0f, 1f, 2f, 3f);
+		uv.c1 = floor(invResolution * i4 + 0.00001f);
+		uv.c0 = invResolution * (i4 - resolution * uv.c1 + 0.5f);
+		uv.c1 = invResolution * (uv.c1 + 0.5f);
+		return uv;
+	}
+
+    public struct Plane {
+		public Point4 GetPoint4 (int i, float resolution, float invResolution) {
+			float4x2 uv = IndexTo4UV(i, resolution, invResolution);
+			return new Point4 {
+				positions = float4x3(uv.c0 - 0.5f, 0f, uv.c1 - 0.5f),
+				normals = float4x3(0f, 1f, 0f)
+			};
+		}
+	}
+
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	public struct Job : IJobFor {
 
@@ -24,16 +47,12 @@ public static class Shapes {
 		);
 
 		public void Execute (int i) {
-			float4x2 uv;
-            float4 i4 = 4f * i + float4(0f, 1f, 2f, 3f);
-			uv.c1 = floor(invResolution * i4 + 0.00001f);
-			uv.c0 = invResolution * (i4 - resolution * uv.c1 + 0.5f) - 0.5f;
-			uv.c1 = invResolution * (uv.c1 + 0.5f) - 0.5f;
+            Point4 p = default(Plane).GetPoint4(i, resolution, invResolution);
 
 			positions[i] = 
-                transpose(TransformVectors(positionTRS, float4x3(uv.c0, 0f, uv.c1)));
+                transpose(TransformVectors(positionTRS, p.positions));
             float3x4 n =
-				transpose(TransformVectors(positionTRS, float4x3(0f, 1f, 0f), 0f));
+				transpose(TransformVectors(positionTRS, p.normals, 0f));
             normals[i] = float3x4(
 				normalize(n.c0), normalize(n.c1), normalize(n.c2), normalize(n.c3)
 			);
