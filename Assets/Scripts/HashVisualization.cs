@@ -20,7 +20,7 @@ public class HashVisualization : MonoBehaviour{
         public float3x4 domainTRS;
 
         public void Execute(int i){
-            float3x4 p = transpose(positions[i]);
+            float4x3 p = transpose(positions[i]);
 
             int4 u = (int4)floor(p.c0);
             int4 v = (int4)floor(p.c1);
