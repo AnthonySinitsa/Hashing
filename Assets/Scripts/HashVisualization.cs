@@ -119,7 +119,7 @@ public class HashVisualization : MonoBehaviour{
 			isDirty = false;
             transform.hasChanged = false;
 
-			JobHandle handle = Shapes.Job.ScheduleParallel(
+			JobHandle handle = Shapes.Job<Shapes.Plane>.ScheduleParallel(
 				positions, normals, resolution, transform.localToWorldMatrix, default
 			);
 
