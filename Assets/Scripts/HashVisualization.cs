@@ -36,6 +36,14 @@ public class HashVisualization : MonoBehaviour{
         }
     }
 
+    public enum Shape { Plane, Sphere, Torus }
+
+	static Shapes.ScheduleDelegate[] shapeJobs = {
+		Shapes.Job<Shapes.Plane>.ScheduleParallel,
+		Shapes.Job<Shapes.Sphere>.ScheduleParallel,
+		Shapes.Job<Shapes.Torus>.ScheduleParallel
+	};
+
     static int
         hashesId = Shader.PropertyToID("_Hashes"),
         positionsId = Shader.PropertyToID("_Positions"),
@@ -47,6 +55,9 @@ public class HashVisualization : MonoBehaviour{
     
     [SerializeField]
     Material material;
+
+    [SerializeField]
+	Shape shape;
 
     [SerializeField, Range(1, 512)]
     int resolution = 16;
@@ -119,7 +130,7 @@ public class HashVisualization : MonoBehaviour{
 			isDirty = false;
             transform.hasChanged = false;
 
-			JobHandle handle = Shapes.Job<Shapes.Torus>.ScheduleParallel(
+			JobHandle handle = shapeJobs[(int)shape](
 				positions, normals, resolution, transform.localToWorldMatrix, default
 			);
 

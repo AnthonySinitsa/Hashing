@@ -112,4 +112,8 @@ public static class Shapes {
             }.ScheduleParallel(positions.Length, resolution, dependency);
         }
 	}
+        public delegate JobHandle ScheduleDelegate (
+            NativeArray<float3x4> positions, NativeArray<float3x4> normals,
+            int resolution, float4x4 trs, JobHandle dependency
+        );
 }
