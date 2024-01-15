@@ -19,7 +19,7 @@ public class HashVisualization : MonoBehaviour{
 
         public float3x4 domainTRS;
 
-        float 4x3 TransformPositions(float3x4 trs, float4x3 p) => float4x3(
+        float4x3 TransformPositions(float3x4 trs, float4x3 p) => float4x3(
 			trs.c0.x * p.c0 + trs.c1.x * p.c1 + trs.c2.x * p.c2 + trs.c3.x,
 			trs.c0.y * p.c0 + trs.c1.y * p.c1 + trs.c2.y * p.c2 + trs.c3.y,
 			trs.c0.z * p.c0 + trs.c1.z * p.c1 + trs.c2.z * p.c2 + trs.c3.z
@@ -79,7 +79,7 @@ public class HashVisualization : MonoBehaviour{
 
         int length = resolution * resolution;
         length = length / 4 + (length & 1);
-        hashes = new NativeArray<uint3>(length, Allocator.Persistent);
+        hashes = new NativeArray<uint4>(length, Allocator.Persistent);
         positions = new NativeArray<float3x4>(length, Allocator.Persistent);
         normals = new NativeArray<float3x4>(length, Allocator.Persistent);
         hashesBuffer = new ComputeBuffer(length * 4, 4);
