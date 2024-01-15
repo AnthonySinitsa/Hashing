@@ -1,4 +1,4 @@
-using Unity.Mathematics
+using Unity.Mathematics;
 
 public readonly struct SmallXXHash {
 
@@ -38,6 +38,9 @@ public readonly struct SmallXXHash {
 
     static uint RotateLeft(uint data, int steps) => 
         (data << steps) | (data >> 32 - steps);
+
+        public static implicit operator SmallXXHash4(SmallXXHash hash) =>
+            new SmallXXHash4(hash.accumulator);
 }
 
 public readonly struct SmallXXHash4 {

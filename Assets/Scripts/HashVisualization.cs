@@ -10,21 +10,21 @@ public class HashVisualization : MonoBehaviour{
     [BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
     struct HashJob : IJobFor{
         [ReadOnly]
-        public NativeArray<float3> positions;
+        public NativeArray<float3x4> positions;
 
         [WriteOnly]
-        public NativeArray<uint> hashes;
+        public NativeArray<uint4> hashes;
 
-        public SmallXXHash hash;
+        public SmallXXHash4 hash;
 
         public float3x4 domainTRS;
 
         public void Execute(int i){
-            float3 p = mul(domainTRS, float4(positions[i], 1f));
+            float3x4 p = transpose(positions[i]);
 
-            int u = (int)floor(p.x);
-            int v = (int)floor(p.y);
-            int w = (int)floor(p.z);
+            int4 u = (int4)floor(p.c0);
+            int4 v = (int4)floor(p.c1);
+            int4 w = (int4)floor(p.c2);
 
             hashes[i] = hash.Eat(u).Eat(v).Eat(w);
         }
@@ -117,11 +117,11 @@ public class HashVisualization : MonoBehaviour{
 			);
 
 			new HashJob {
-				positions = positions,
-				hashes = hashes,
+				positions = positions.Reinterpret<float3x4>(3 * 4),
+				hashes = hashes.Reinterpret<uint4>(4),
 				hash = SmallXXHash.Seed(seed),
 				domainTRS = domain.Matrix
-			}.ScheduleParallel(hashes.Length, resolution, handle).Complete();
+			}.ScheduleParallel(hashes.Length / 4, resolution, handle).Complete();
 
 			hashesBuffer.SetData(hashes);
 			positionsBuffer.SetData(positions);
