@@ -59,6 +59,7 @@ public abstract class Visualization : MonoBehaviour {
 		normalsBuffer = new ComputeBuffer(length * 4, 3 * 4);
 
 		propertyBlock ??= new MaterialPropertyBlock();
+		EnableVisualization(length, propertyBlock);
 		propertyBlock.SetBuffer(positionsId, positionsBuffer);
 		propertyBlock.SetBuffer(normalsId, normalsBuffer);
 		propertyBlock.SetVector(configId, new Vector4(
@@ -73,7 +74,18 @@ public abstract class Visualization : MonoBehaviour {
 		normalsBuffer.Release();
 		positionsBuffer = null;
 		normalsBuffer = null;
+		DisableVisualization();
 	}
+
+	protected void EnableVisualization(
+		int dataLength, MaterialPropertyBlock propertyBlock
+	);
+
+	protected void DisableVisualization();
+
+	protected void UpdateVisualization (
+		NativeArray<float3x4> positions, int resolution, JobHandle handle
+	);
 
 	void OnValidate () {
 		if (positionsBuffer != null && enabled) {
@@ -87,8 +99,11 @@ public abstract class Visualization : MonoBehaviour {
 			isDirty = false;
 			transform.hasChanged = false;
 
-			JobHandle handle = shapeJobs[(int)shape](
-				positions, normals, resolution, transform.localToWorldMatrix, default
+			UpdateVisualization(
+				positions, resolution,
+				shapeJobs[(int)shape](
+					positions, normals, resolution, transform.localToWorldMatrix, default
+				)
 			);
 
 			positionsBuffer.SetData(positions.Reinterpret<float3>(3 * 4 * 4));
