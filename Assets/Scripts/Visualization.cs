@@ -77,13 +77,13 @@ public abstract class Visualization : MonoBehaviour {
 		DisableVisualization();
 	}
 
-	protected void EnableVisualization(
+	protected abstract void EnableVisualization(
 		int dataLength, MaterialPropertyBlock propertyBlock
 	);
 
-	protected void DisableVisualization();
+	protected abstract void DisableVisualization();
 
-	protected void UpdateVisualization (
+	protected abstract void UpdateVisualization (
 		NativeArray<float3x4> positions, int resolution, JobHandle handle
 	);
 
