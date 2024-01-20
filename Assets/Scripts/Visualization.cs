@@ -40,7 +40,7 @@ public abstract class Visualization : MonoBehaviour {
 
 	NativeArray<float3x4> positions, normals;
 
-    ComputeBuffer positionsBuffer, normalsBuffer;
+	ComputeBuffer positionsBuffer, normalsBuffer;
 
 	MaterialPropertyBlock propertyBlock;
 
@@ -77,16 +77,6 @@ public abstract class Visualization : MonoBehaviour {
 		DisableVisualization();
 	}
 
-	protected abstract void EnableVisualization(
-		int dataLength, MaterialPropertyBlock propertyBlock
-	);
-
-	protected abstract void DisableVisualization();
-
-	protected abstract void UpdateVisualization (
-		NativeArray<float3x4> positions, int resolution, JobHandle handle
-	);
-
 	void OnValidate () {
 		if (positionsBuffer != null && enabled) {
 			OnDisable();
@@ -119,4 +109,14 @@ public abstract class Visualization : MonoBehaviour {
 			instanceMesh, 0, material, bounds, resolution * resolution, propertyBlock
 		);
 	}
+
+	protected abstract void EnableVisualization (
+		int dataLength, MaterialPropertyBlock propertyBlock
+	);
+
+	protected abstract void DisableVisualization ();
+
+	protected abstract void UpdateVisualization (
+		NativeArray<float3x4> positions, int resolution, JobHandle handle
+	);
 }

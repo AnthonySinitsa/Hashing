@@ -96,13 +96,13 @@ public static class Shapes {
 			NativeArray<float3x4> positions, NativeArray<float3x4> normals,
 			int resolution,	float4x4 trs, JobHandle dependency
 		) => new Job<S> {
-				positions = positions,
-				normals = normals,
-				resolution = resolution,
-				invResolution = 1f / resolution,
-				positionTRS = trs.Get3x4(),
-				normalTRS = transpose(inverse(trs)).Get3x4()
-			}.ScheduleParallel(positions.Length, resolution, dependency);
+			positions = positions,
+			normals = normals,
+			resolution = resolution,
+			invResolution = 1f / resolution,
+			positionTRS = trs.Get3x4(),
+			normalTRS = transpose(inverse(trs)).Get3x4()
+		}.ScheduleParallel(positions.Length, resolution, dependency);
 	}
 
 	public delegate JobHandle ScheduleDelegate (
