@@ -14,7 +14,7 @@ public static partial class Noise {
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	public struct Job<N> : IJobFor where N : struct, INoise {
 
-        [ReadOnly]
+		[ReadOnly]
 		public NativeArray<float3x4> positions;
 
 		[WriteOnly]
@@ -29,7 +29,8 @@ public static partial class Noise {
 				domainTRS.TransformVectors(transpose(positions[i])), hash
 			);
 		}
-        public static JobHandle ScheduleParallel (
+
+		public static JobHandle ScheduleParallel (
 			NativeArray<float3x4> positions, NativeArray<float4> noise,
 			int seed, SpaceTRS domainTRS, int resolution, JobHandle dependency
 		) => new Job<N> {
@@ -38,8 +39,9 @@ public static partial class Noise {
 			hash = SmallXXHash.Seed(seed),
 			domainTRS = domainTRS.Matrix,
 		}.ScheduleParallel(positions.Length, resolution, dependency);
-    }
-    public delegate JobHandle ScheduleDelegate (
+	}
+
+	public delegate JobHandle ScheduleDelegate (
 		NativeArray<float3x4> positions, NativeArray<float4> noise,
 		int seed, SpaceTRS domainTRS, int resolution, JobHandle dependency
 	);

@@ -21,7 +21,7 @@ public class HashVisualization : Visualization {
 
 		public float3x4 domainTRS;
 
-		public void Execute(int i) {
+		public void Execute (int i) {
 			float4x3 p = domainTRS.TransformVectors(transpose(positions[i]));
 
 			int4 u = (int4)floor(p.c0);
@@ -33,7 +33,7 @@ public class HashVisualization : Visualization {
 	}
 
 	static int hashesId = Shader.PropertyToID("_Hashes");
-
+	
 	[SerializeField]
 	int seed;
 
@@ -45,13 +45,12 @@ public class HashVisualization : Visualization {
 	NativeArray<uint4> hashes;
 
 	ComputeBuffer hashesBuffer;
-
-	protected override void EnableVisualization (int dataLength, MaterialPropertyBlock propertyBlock) {
+	
+	protected override void EnableVisualization (
+		int dataLength, MaterialPropertyBlock propertyBlock
+	) {
 		hashes = new NativeArray<uint4>(dataLength, Allocator.Persistent);
-		// positions = new NativeArray<float3x4>(length, Allocator.Persistent);
-		// normals = new NativeArray<float3x4>(length, Allocator.Persistent);
 		hashesBuffer = new ComputeBuffer(dataLength * 4, 4);
-
 		propertyBlock.SetBuffer(hashesId, hashesBuffer);
 	}
 
@@ -64,14 +63,13 @@ public class HashVisualization : Visualization {
 	protected override void UpdateVisualization (
 		NativeArray<float3x4> positions, int resolution, JobHandle handle
 	) {
+		new HashJob {
+			positions = positions,
+			hashes = hashes,
+			hash = SmallXXHash.Seed(seed),
+			domainTRS = domain.Matrix
+		}.ScheduleParallel(hashes.Length, resolution, handle).Complete();
 
-			new HashJob {
-				positions = positions,
-				hashes = hashes,
-				hash = SmallXXHash.Seed(seed),
-				domainTRS = domain.Matrix
-			}.ScheduleParallel(hashes.Length, resolution, handle).Complete();
-
-			hashesBuffer.SetData(hashes.Reinterpret<uint>(4 * 4));
+		hashesBuffer.SetData(hashes.Reinterpret<uint>(4 * 4));
 	}
 }
