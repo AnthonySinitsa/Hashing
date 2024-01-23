@@ -29,7 +29,12 @@ public static partial class Noise {
 		public float4 Evaluate (SmallXXHash4 hash, float4 x) => 
 			(1f + hash.Floats01A) * select(-x, x, ((uint4)hash & 1 << 8) == 0);
 
-		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y) => 0f;
+		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y){
+			float4 gx = hash.Floats01A * 2f - 1f;
+			float4 gy = 0.5f - abs(gx);
+			gx -= floor(gx + 0.5f);
+			return (gx * x + gy * y) * 2f;
+		}
 
 		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y, float4 z) => 0f;
 	}
