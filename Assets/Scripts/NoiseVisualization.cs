@@ -8,9 +8,9 @@ using static Noise;
 public class NoiseVisualization : Visualization {
 
 	static ScheduleDelegate[] noiseJobs = {
-		Job<Lattice1D>.ScheduleParallel,
-		Job<Lattice2D>.ScheduleParallel,
-		Job<Lattice3D>.ScheduleParallel
+		Job<Lattice1D<Value>>.ScheduleParallel,
+		Job<Lattice2D<Value>>.ScheduleParallel,
+		Job<Lattice3D<Value>>.ScheduleParallel
 	};
 
 	static int noiseId = Shader.PropertyToID("_Noise");
