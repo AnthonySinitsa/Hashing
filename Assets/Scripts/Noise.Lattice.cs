@@ -26,6 +26,7 @@ public static partial class Noise {
 
 		public float4 GetNoise4(float4x3 positions, SmallXXHash4 hash) {
 			LatticeSpan4 x = GetLatticeSpan4(positions.c0);
+
 			var g = default(G);
 			return lerp(
 				g.Evaluate(hash.Eat(x.p0), x.g0), g.Evaluate(hash.Eat(x.p1), x.g1), x.t
@@ -33,7 +34,7 @@ public static partial class Noise {
 		}
 	}
 
-	public struct Lattice2D<G> : INoise where G : struct, IGradient {
+	public struct Lattice2D<G> : INoise where G: struct, IGradient {
 
 		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash) {
 			LatticeSpan4

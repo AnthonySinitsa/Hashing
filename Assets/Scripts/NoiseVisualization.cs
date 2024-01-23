@@ -25,8 +25,8 @@ public class NoiseVisualization : Visualization {
 	[SerializeField]
 	int seed;
 
-	public enum NoiseType{Perlin, Value}
-	
+	public enum NoiseType { Perlin, Value }
+
 	[SerializeField]
 	NoiseType type;
 
