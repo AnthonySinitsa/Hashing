@@ -36,6 +36,13 @@ public static partial class Noise {
 			return (gx * x + gy * y) * (2f / 0.53528f);
 		}
 
-		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y, float4 z) => 0f;
+		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y, float4 z){
+			float4 gx = hash.Floats01A * 2f - 1f, gy = hash.Floats01D * 2f - 1f;
+			float4 gz = 1f - abs(gx) - abs(gy);
+			float4 offset = max(-gz, 0f);
+			gx += select(-offset, offset, gx < 0f);
+			gy += select(-offset, offset, gy < 0f);
+			return (gx * x + gy * y + gz * z) * (1f / 0.56290f);
+		}
 	}
 }
