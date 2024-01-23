@@ -27,7 +27,7 @@ public static partial class Noise {
 	public struct Perlin : IGradient {
 
 		public float4 Evaluate (SmallXXHash4 hash, float4 x) => 
-			2f * select(-x, x, ((uint4)hash & 1) == 0);
+			(1f + hash.Floats01A) * select(-x, x, ((uint4)hash & 1 << 8) == 0);
 
 		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y) => 0f;
 
