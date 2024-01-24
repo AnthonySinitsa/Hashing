@@ -50,7 +50,7 @@ public static partial class Noise {
 			float4 sum = 0f;
 
 			for(int o = 0; o < settings.octaves; o++){
-				sum += amplitude * default(N).GetNoise4(frequency * position, hash);
+				sum += amplitude * default(N).GetNoise4(frequency * position, hash + o);
 				amplitudeSum += amplitude;
 				frequency *= 2;
 				amplitude *= 0.5f;
