@@ -23,7 +23,7 @@ public class NoiseVisualization : Visualization {
 	static int noiseId = Shader.PropertyToID("_Noise");
 	
 	[SerializeField]
-	int seed;
+	Settings noiseSettings = Settings.Default;
 
 	public enum NoiseType { Perlin, Value }
 
@@ -60,7 +60,7 @@ public class NoiseVisualization : Visualization {
 		NativeArray<float3x4> positions, int resolution, JobHandle handle
 	) {
 		noiseJobs[(int)type, dimensions - 1](
-			positions, noise, seed, domain, resolution, handle
+			positions, noise, noiseSettings, domain, resolution, handle
 		).Complete();
 		noiseBuffer.SetData(noise.Reinterpret<float>(4 * 4));
 	}

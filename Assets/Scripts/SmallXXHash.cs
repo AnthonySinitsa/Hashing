@@ -91,4 +91,7 @@ public readonly struct SmallXXHash4 {
 		avalanche ^= avalanche >> 16;
 		return avalanche;
 	}
+
+	public static SmallXXHash4 operator + (SmallXXHash4 h, int v) =>
+		h.accumulator + (uint)v;
 }
