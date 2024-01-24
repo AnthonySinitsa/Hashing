@@ -19,9 +19,13 @@ public static partial class Noise {
 		[Range(1, 6)]
 		public int octaves;
 
+		[Range(2, 4)]
+		public int lacunarity;
+
 		public static Settings Default => new Settings{
 			frequency = 4,
-			octaves = 1
+			octaves = 1,
+			lacunarity = 2
 		};
 	}
 
@@ -51,9 +55,9 @@ public static partial class Noise {
 
 			for(int o = 0; o < settings.octaves; o++){
 				sum += amplitude * default(N).GetNoise4(frequency * position, hash + o);
-				amplitudeSum += amplitude;
-				frequency *= 2;
+				frequency *= settings.lacunarity;
 				amplitude *= 0.5f;
+				amplitudeSum += amplitude;
 			}
 			noise[i] = sum / amplitudeSum;
 		}
