@@ -416,7 +416,10 @@ MonoBehaviour:
   instanceScale: 2
   resolution: 16
   displacement: 0.1
-  seed: 0
+  noiseSettings:
+    seed: 0
+    frequency: 4
+    octaves: 3
   type: 0
   dimensions: 3
   domain:
