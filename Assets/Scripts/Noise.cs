@@ -3,6 +3,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEngine;
 
 using static Unity.Mathematics.math;
 
@@ -12,7 +13,12 @@ public static partial class Noise {
 	public struct Settings{
 		public int seed;
 
-		public static Settings Default => new Settings{};
+		[Min(1)]
+		public int frequency;
+
+		public static Settings Default => new Settings{
+			frequency = 4
+		};
 	}
 
 	public interface INoise {
@@ -33,10 +39,10 @@ public static partial class Noise {
 		public float3x4 domainTRS;
 
 		public void Execute (int i) {
+			float4x3 position = domainTRS.TransformVectors(transpose(positions[i]));
 			var hash = SmallXXHash4.Seed(settings.seed);
-			noise[i] = default(N).GetNoise4(
-				domainTRS.TransformVectors(transpose(positions[i])), hash
-			);
+			int frequency = settings.frequency;
+			noise[i] = default(N).GetNoise4(frequency * position, hash);
 		}
 
 		public static JobHandle ScheduleParallel (
