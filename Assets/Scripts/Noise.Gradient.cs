@@ -14,6 +14,21 @@ public static partial class Noise {
 		float4 EvaluateAfterInterpolation(float4 value);
 	}
 
+	public struct Turbulence<G> : IGradient where G : struct, IGradient {
+
+		public float4 Evaluate (SmallXXHash4 hash, float4 x) =>
+			default(G).Evaluate(hash, x);
+
+		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y) =>
+			default(G).Evaluate(hash, x, y);
+
+		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y, float4 z) =>
+			default(G).Evaluate(hash, x, y, z);
+
+		public float4 EvaluateAfterInterpolation (float4 value) =>
+			abs(default(G).EvaluateAfterInterpolation(value));
+	}
+
 	public struct Value : IGradient {
 
 		public float4 Evaluate (SmallXXHash4 hash, float4 x) => hash.Floats01A * 2f - 1f;
@@ -47,20 +62,7 @@ public static partial class Noise {
 			gy += select(-offset, offset, gy < 0f);
 			return (gx * x + gy * y + gz * z) * (1f / 0.56290f);
 		}
-	}
 
-	public struct Turbulence<G> : IGradient where G : struct, IGradient {
-
-		public float4 Evaluate (SmallXXHash4 hash, float4 x) =>
-			default(G).Evaluate(hash, x);
-
-		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y) =>
-			default(G).Evaluate(hash, x, y);
-
-		public float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y, float4 z) =>
-			default(G).Evaluate(hash, x, y, z);
-
-		public float4 EvaluateAfterInterpolation (float4 value) =>
-			abs(default(G).EvaluateAfterInterpolation(value));
+		public float4 EvaluateAfterInterpolation (float4 value) => value;
 	}
 }
