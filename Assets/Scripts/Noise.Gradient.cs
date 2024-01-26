@@ -11,7 +11,7 @@ public static partial class Noise {
 
 		float4 Evaluate (SmallXXHash4 hash, float4 x, float4 y, float4 z);
 
-		float4 EvaluateAfterInterpolation(float4 value);
+		float4 EvaluateAfterInterpolation (float4 value);
 	}
 
 	public struct Turbulence<G> : IGradient where G : struct, IGradient {
