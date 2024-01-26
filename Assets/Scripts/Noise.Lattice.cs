@@ -10,7 +10,8 @@ public static partial class Noise {
 		public float4 t;
 	}
 
-	static LatticeSpan4 GetLatticeSpan4 (float4 coordinates) {
+	static LatticeSpan4 GetLatticeSpan4 (float4 coordinates, int frequency) {
+		coordinates *= frequency;
 		float4 points = floor(coordinates);
 		LatticeSpan4 span;
 		span.p0 = (int4)points;
@@ -24,8 +25,8 @@ public static partial class Noise {
 
 	public struct Lattice1D<G> : INoise where G : struct, IGradient {
 
-		public float4 GetNoise4(float4x3 positions, SmallXXHash4 hash) {
-			LatticeSpan4 x = GetLatticeSpan4(positions.c0);
+		public float4 GetNoise4(float4x3 positions, SmallXXHash4 hash, int frequency) {
+			LatticeSpan4 x = GetLatticeSpan4(positions.c0, frequency);
 
 			var g = default(G);
 			return g.EvaluateAfterInterpolation(lerp(
@@ -36,9 +37,10 @@ public static partial class Noise {
 
 	public struct Lattice2D<G> : INoise where G: struct, IGradient {
 
-		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash) {
+		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
 			LatticeSpan4
-				x = GetLatticeSpan4(positions.c0), z = GetLatticeSpan4(positions.c2);
+				x = GetLatticeSpan4(positions.c0, frequency), 
+				z = GetLatticeSpan4(positions.c2, frequency);
 
 			SmallXXHash4 h0 = hash.Eat(x.p0), h1 = hash.Eat(x.p1);
 
@@ -61,11 +63,11 @@ public static partial class Noise {
 
 	public struct Lattice3D<G> : INoise where G : struct, IGradient {
 
-		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash) {
+		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
 			LatticeSpan4
-				x = GetLatticeSpan4(positions.c0),
-				y = GetLatticeSpan4(positions.c1),
-				z = GetLatticeSpan4(positions.c2);
+				x = GetLatticeSpan4(positions.c0, frequency),
+				y = GetLatticeSpan4(positions.c1, frequency),
+				z = GetLatticeSpan4(positions.c2, frequency);
 
 			SmallXXHash4
 				h0 = hash.Eat(x.p0), h1 = hash.Eat(x.p1),
