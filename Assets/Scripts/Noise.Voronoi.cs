@@ -9,8 +9,12 @@ public static partial class Noise {
 		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
 			LatticeSpan4 x = default(L).GetLatticeSpan4(positions.c0, frequency);
 
-			SmallXXHash4 h = hash.Eat(x.p0);
-			return abs(h.Floats01A - x.g0);
+			float4 minima = 2f;
+			for(int u = -1; u <= 1; u++){
+				SmallXXHash4 h = hash.Eat(x.p0);
+				minima = UpdateVoronoiMinima(minima, abs(h.Floats01A + u - x.g0));
+			}
+			return minima;
 		}
 	}
 
@@ -37,5 +41,9 @@ public static partial class Noise {
 
 			return 0f;
 		}
+	}
+
+	static float4 UpdateVoronoiMinima (float4 minima, float4 distances) {
+		return select(minima, distances, distances < minima);
 	}
 }
