@@ -7,11 +7,12 @@ public static partial class Noise {
 	public struct Voronoi1D<L> : INoise where L : struct, ILattice {
 
 		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
-			LatticeSpan4 x = default(L).GetLatticeSpan4(positions.c0, frequency);
+			var l = default(L);
+			LatticeSpan4 x = l.GetLatticeSpan4(positions.c0, frequency);
 
 			float4 minima = 2f;
 			for(int u = -1; u <= 1; u++){
-				SmallXXHash4 h = hash.Eat(x.p0);
+				SmallXXHash4 h = hash.Eat(l.ValidateSingleStep(x.p0 + u, frequency));
 				minima = UpdateVoronoiMinima(minima, abs(h.Floats01A + u - x.g0));
 			}
 			return minima;
