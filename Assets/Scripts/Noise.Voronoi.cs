@@ -9,7 +9,8 @@ public static partial class Noise {
 		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
 			LatticeSpan4 x = default(L).GetLatticeSpan4(positions.c0, frequency);
 
-			return 0f;
+			SmallXXHash4 h = hash.Eat(x.p0);
+			return abs(h.Floats01A - x.g0);
 		}
 	}
 
