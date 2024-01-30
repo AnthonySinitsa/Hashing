@@ -35,11 +35,14 @@ public static partial class Noise {
 					SmallXXHash4 h = hx.Eat(l.ValidateSingleStep(z.p0 + v, frequency));
 					float4 zOffset = v - z.g0;
 					minima = UpdateVoronoiMinima(minima, GetDistance(
-						h.Floats01A + xOffset, h.Floats01D + zOffset
+						h.Floats01A + xOffset, h.Floats01B + zOffset
+					));
+					minima = UpdateVoronoiMinima(minima, GetDistance(
+						h.Floats01C + xOffset, h.Floats01D + zOffset
 					));
 				}
 			}
-			return select(0f, 1f, minima > 1f);
+			return mine(minima, 1f);
 		}
 	}
 
