@@ -66,9 +66,14 @@ public static partial class Noise {
 							hy.Eat(l.ValidateSingleStep(z.p0 + w, frequency));
 						float4 zOffset = w - z.g0;
 						minima = UpdateVoronoiMinima(minima, GetDistance(
-							h.Floats01A + xOffset,
-							h.Floats01B + yOffset,
-							h.Floats01C + zOffset
+							h.GetBitAsFloats01(5, 0) + xOffset,
+							h.GetBitAsFloats01(5, 5) + yOffset,
+							h.GetBitAsFloats01(5, 10) + zOffset
+						));
+						minima = UpdateVoronoiMinima(minima, GetDistance(
+							h.GetBitsAsFloats01(5, 15) + xOffset,
+							h.GetBitsAsFloats01(5, 20) + yOffset,
+							h.GetBitsAsFloats01(5, 25) + zOffset
 						));
 					}
 				}
