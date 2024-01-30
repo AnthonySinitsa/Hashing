@@ -42,7 +42,7 @@ public static partial class Noise {
 					));
 				}
 			}
-			return mine(minima, 1f);
+			return min(minima, 1f);
 		}
 	}
 
