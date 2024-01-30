@@ -47,7 +47,6 @@ public static partial class Noise {
 	}
 
 	public struct Voronoi3D<L> : INoise where L : struct, ILattice {
-
 		public float4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
 			var l = default(L);
 			LatticeSpan4
@@ -55,7 +54,26 @@ public static partial class Noise {
 				y = l.GetLatticeSpan4(positions.c1, frequency),
 				z = l.GetLatticeSpan4(positions.c2, frequency);
 
-			return 0f;
+			float4 minima = 2f;
+			for (int u = -1; u <= 1; u++) {
+				SmallXXHash4 hx = hash.Eat(l.ValidateSingleStep(x.p0 + u, frequency));
+				float4 xOffset = u - x.g0;
+				for (int v = -1; v <= 1; v++) {
+					SmallXXHash4 hy = hx.Eat(l.ValidateSingleStep(y.p0 + v, frequency));
+					float4 yOffset = v - y.g0;
+					for (int w = -1; w <= 1; w++) {
+						SmallXXHash4 h =
+							hy.Eat(l.ValidateSingleStep(z.p0 + w, frequency));
+						float4 zOffset = w - z.g0;
+						minima = UpdateVoronoiMinima(minima, GetDistance(
+							h.Floats01A + xOffset,
+							h.Floats01B + yOffset,
+							h.Floats01C + zOffset
+						));
+					}
+				}
+			}
+			return min(minima, 1f);
 		}
 	}
 
@@ -63,5 +81,6 @@ public static partial class Noise {
 		return select(minima, distances, distances < minima);
 	}
 
-	static float4 GetDistance (float4 x, float4 y) => sqrt(x * x + y * y);
+	static float4 GetDistance (float4 x, float4 y, float4 z) =>
+		sqrt(x * x + y * y + z * z);
 }
